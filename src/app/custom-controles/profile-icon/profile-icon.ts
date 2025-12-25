@@ -32,7 +32,6 @@ export class ProfileIcon implements ControlValueAccessor {
 
   writeValue(icon: string | null): void {
     this.selectedIcon = icon;
-    console.log('iconnnnnnnnnn');
 
     if (icon && icon !== '') {
       this.showAllIcons = false;

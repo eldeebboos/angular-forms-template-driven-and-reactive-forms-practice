@@ -55,31 +55,40 @@
       </div>
     </section>
     <section>
-      <nav>Phone</nav>
-      <div class="flex-column" ngModelGroup="phone" #phoneGroup="ngModelGroup">
-        <div class="flex-group">
-          <input
-            placeholder="Phone"
-            [(ngModel)]="contact.phone.phoneNumber"
-            name="phoneNumber"
-            required
-          />
-          <img src="/assets/plus-grey-blue.png" class="add" />
-        </div>
-        <div class="radio">
-          @for (phoneType of phoneTypes; track phoneType.value) {
-          <input
-            type="radio"
-            [value]="phoneType.value"
-            [(ngModel)]="contact.phone.phoneType"
-            name="phoneType"
-          />
-          {{ phoneType.title }}
-          }
-        </div>
-        <em *ngIf="phoneGroup.invalid && phoneGroup.touched"
-          >Please enter a valid phone number.</em
+      <nav>Phones</nav>
+      <div class="flex-column" ngModelGroup="phones" #phoneGroup="ngModelGroup">
+        <div
+          *ngFor="let phone of contact.phones; let i = index"
+          class="flex-column"
         >
+          <div class="flex-group">
+            <input
+              placeholder="Phone"
+              [(ngModel)]="phone.phoneNumber"
+              name="phoneNumber{{ i }}"
+              required
+            />
+            <img
+              src="/assets/plus-grey-blue.png"
+              class="add"
+              (click)="addNewPhone()"
+            />
+          </div>
+          <div class="radio">
+            @for (phoneType of phoneTypes; track phoneType.value) {
+            <input
+              type="radio"
+              [value]="phoneType.value"
+              [(ngModel)]="phone.phoneType"
+              name="phoneType{{ i }}"
+            />
+            {{ phoneType.title }}
+            }
+          </div>
+          <em *ngIf="phoneGroup.invalid && phoneGroup.touched"
+            >Please enter a valid phone number.</em
+          >
+        </div>
       </div>
     </section>
     <section>
@@ -87,47 +96,58 @@
       <div>
         <div
           class="address"
-          ngModelGroup="address"
+          ngModelGroup="addresses"
           #addressGroup="ngModelGroup"
           [class.error]="addressGroup.invalid && addressGroup.touched"
         >
-          <div class="flex-group">
+          <div
+            *ngFor="let address of contact.addresses; let i = index"
+            class="flex-column"
+          >
+            <div class="flex-group">
+              <input
+                placeholder="Address"
+                [(ngModel)]="address.streetAddress"
+                name="streetAddress{{ i }}"
+                required
+              />
+              <img
+                src="/assets/plus-grey-blue.png"
+                class="add"
+                (click)="addNewAddress()"
+              />
+            </div>
             <input
-              placeholder="Address"
-              [(ngModel)]="contact.address.streetAddress"
-              name="streetAddress"
+              placeholder="City"
+              [(ngModel)]="address.city"
+              name="city{{ i }}"
               required
             />
-            <img src="/assets/plus-grey-blue.png" class="add" />
-          </div>
-          <input
-            placeholder="City"
-            [(ngModel)]="contact.address.city"
-            name="city"
-            required
-          />
-          <input
-            placeholder="State/Region"
-            [(ngModel)]="contact.address.state"
-            name="state"
-            required
-          />
-          <input
-            placeholder="Zip/Postal Code"
-            [(ngModel)]="contact.address.postalCode"
-            name="postalCode"
-            required
-          />
-          <select [(ngModel)]="contact.address.addressType" name="addressType">
-            @for (addressType of addressTypes; track addressType.value) {
+            <input
+              placeholder="State/Region"
+              [(ngModel)]="address.state"
+              name="state{{ i }}"
+              required
+            />
+            <input
+              placeholder="Zip/Postal Code"
+              [(ngModel)]="address.postalCode"
+              name="postalCode{{ i }}"
+              required
+            />
+            <select [(ngModel)]="address.addressType" name="addressType{{ i }}">
+              @for (addressType of addressTypes; track addressType.value) {
 
-            <option [value]="addressType.value">{{ addressType.title }}</option>
-            }
-          </select>
+              <option [value]="addressType.value">
+                {{ addressType.title }}
+              </option>
+              }
+            </select>
+          </div>
+          <em *ngIf="addressGroup.invalid && addressGroup.touched"
+            >Please enter a valid address.</em
+          >
         </div>
-        <em *ngIf="addressGroup.invalid && addressGroup.touched"
-          >Please enter a valid address.</em
-        >
       </div>
     </section>
     <section>
@@ -149,7 +169,9 @@
     </section>
     <div class="buttons">
       @if(!contactForm.submitted){
-      <button class="secondary" type="button">Cancel</button>
+      <button class="secondary" type="button" (click)="goToContactsList()">
+        Cancel
+      </button>
       <button class="primary" type="submit" [disabled]="contactForm.invalid">
         Save</button
       >} @else { <button disabled class="saving">Saving...</button>}

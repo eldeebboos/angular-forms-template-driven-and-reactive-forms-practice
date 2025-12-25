@@ -7,8 +7,8 @@ export interface Contact {
   favoritesRanking: number | null;
   personal: boolean;
   notes: string;
-  phone: Phone;
-  address: Address;
+  phones: Phone[];
+  addresses: Address[];
 }
 
 export interface Phone {

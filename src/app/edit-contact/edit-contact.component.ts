@@ -31,17 +31,21 @@ export class EditContactComponent implements OnInit {
     favoritesRanking: 0,
     personal: false,
     notes: '',
-    phone: {
-      phoneNumber: '',
-      phoneType: '',
-    },
-    address: {
-      streetAddress: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      addressType: '',
-    },
+    phones: [
+      {
+        phoneNumber: '',
+        phoneType: '',
+      },
+    ],
+    addresses: [
+      {
+        streetAddress: '',
+        city: '',
+        state: '',
+        postalCode: '',
+        addressType: '',
+      },
+    ],
   };
 
   constructor(
@@ -60,10 +64,31 @@ export class EditContactComponent implements OnInit {
   }
 
   saveContact(form: NgForm) {
-    console.log(form.value);
+    console.log(this.contact);
 
     this.contactService.saveContact(this.contact).subscribe({
-      next: () => this.router.navigate(['/contacts']),
+      next: () => this.goToContactsList(),
+    });
+  }
+
+  goToContactsList() {
+    this.router.navigate(['/contacts']);
+  }
+
+  addNewPhone() {
+    this.contact.phones.push({
+      phoneNumber: '',
+      phoneType: '',
+    });
+  }
+
+  addNewAddress() {
+    this.contact.addresses.push({
+      streetAddress: '',
+      city: '',
+      state: '',
+      postalCode: '',
+      addressType: '',
     });
   }
 }
