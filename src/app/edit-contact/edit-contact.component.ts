@@ -4,9 +4,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { addressTypes, Contact, phoneTypes } from '../contacts/contact.model';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ContactsService } from '../contacts/contacts.service';
+import { RestrictedWordsValidator } from '../validators/restricted-words-validator.directive';
+import { DateValueAccessorDirective } from '../custom-controles/date-value-accessor/date-value-accessor.directive';
+import { ProfileIcon } from '../custom-controles/profile-icon/profile-icon';
 
 @Component({
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RestrictedWordsValidator,
+    DateValueAccessorDirective,
+    ProfileIcon,
+  ],
   templateUrl: './edit-contact.component.html',
   styleUrls: ['./edit-contact.component.css'],
 })
@@ -15,9 +24,10 @@ export class EditContactComponent implements OnInit {
   addressTypes = addressTypes;
   contact: Contact = {
     id: '',
+    icon: '',
     firstName: '',
     lastName: '',
-    dateOfBirth: '',
+    dateOfBirth: null,
     favoritesRanking: 0,
     personal: false,
     notes: '',

@@ -6,9 +6,10 @@ export class InMemoryContactsApi implements InMemoryDbService {
     let contacts: Contact[] = [
       {
         id: '5CehW',
+        icon: 'person-01.png',
         firstName: 'Percival',
         lastName: 'Doodleplumb',
-        dateOfBirth: new Date('1994/05/05').toISOString().split('T')[0],
+        dateOfBirth: new Date('1994/05/05'),
         favoritesRanking: 0,
         personal: false,
         notes: '',
@@ -23,9 +24,10 @@ export class InMemoryContactsApi implements InMemoryDbService {
       },
       {
         id: 'A6rwe',
+        icon: 'person-05.png',
         firstName: 'Mortimer',
         lastName: 'Flungford',
-        dateOfBirth: new Date('1988/10/05').toISOString().split('T')[0],
+        dateOfBirth: new Date('1988/10/05'),
         favoritesRanking: 0,
         personal: false,
         notes: '',
@@ -40,9 +42,10 @@ export class InMemoryContactsApi implements InMemoryDbService {
       },
       {
         id: '3bNGA',
+        icon: 'person-14.png',
         firstName: 'Wanda',
         lastName: 'Giggleworth',
-        dateOfBirth: new Date('1986/11/08').toISOString().split('T')[0],
+        dateOfBirth: new Date('1986/11/08'),
         favoritesRanking: 1,
         personal: false,
         notes: '',

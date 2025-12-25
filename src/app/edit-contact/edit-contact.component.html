@@ -4,17 +4,29 @@
     <section>
       <nav>Name/Info</nav>
       <div>
+        <con-profile-icon [(ngModel)]="contact.icon" name="icon" />
         <input type="hidden" [(ngModel)]="contact.id" name="id" />
         <input
           placeholder="First Name"
           [(ngModel)]="contact.firstName"
           name="firstName"
+          #firstName="ngModel"
+          [class.error]="firstName.invalid && firstName.touched"
+          required
+          minlength="3"
         />
+        <em *ngIf="firstName.errors?.['required'] && firstName.touched"
+          >First Name is required.</em
+        >
+        <em *ngIf="firstName.errors?.['minlength'] && firstName.touched"
+          >First Name must be at least 3 characters long.</em
+        >
         <input
           placeholder="Last Name"
           [(ngModel)]="contact.lastName"
           name="lastName"
         />
+
         <input
           type="date"
           placeholder="Date of Birth"
@@ -44,12 +56,13 @@
     </section>
     <section>
       <nav>Phone</nav>
-      <div class="flex-column" ngModelGroup="phone">
+      <div class="flex-column" ngModelGroup="phone" #phoneGroup="ngModelGroup">
         <div class="flex-group">
           <input
             placeholder="Phone"
             [(ngModel)]="contact.phone.phoneNumber"
             name="phoneNumber"
+            required
           />
           <img src="/assets/plus-grey-blue.png" class="add" />
         </div>
@@ -64,17 +77,26 @@
           {{ phoneType.title }}
           }
         </div>
+        <em *ngIf="phoneGroup.invalid && phoneGroup.touched"
+          >Please enter a valid phone number.</em
+        >
       </div>
     </section>
     <section>
       <nav>Address</nav>
       <div>
-        <div class="address" ngModelGroup="address">
+        <div
+          class="address"
+          ngModelGroup="address"
+          #addressGroup="ngModelGroup"
+          [class.error]="addressGroup.invalid && addressGroup.touched"
+        >
           <div class="flex-group">
             <input
               placeholder="Address"
               [(ngModel)]="contact.address.streetAddress"
               name="streetAddress"
+              required
             />
             <img src="/assets/plus-grey-blue.png" class="add" />
           </div>
@@ -82,16 +104,19 @@
             placeholder="City"
             [(ngModel)]="contact.address.city"
             name="city"
+            required
           />
           <input
             placeholder="State/Region"
             [(ngModel)]="contact.address.state"
             name="state"
+            required
           />
           <input
             placeholder="Zip/Postal Code"
             [(ngModel)]="contact.address.postalCode"
             name="postalCode"
+            required
           />
           <select [(ngModel)]="contact.address.addressType" name="addressType">
             @for (addressType of addressTypes; track addressType.value) {
@@ -100,19 +125,34 @@
             }
           </select>
         </div>
+        <em *ngIf="addressGroup.invalid && addressGroup.touched"
+          >Please enter a valid address.</em
+        >
       </div>
     </section>
     <section>
       <nav>Notes</nav>
       <div>
-        <textarea name="notes" rows="3" [(ngModel)]="contact.notes"></textarea>
+        <textarea
+          name="notes"
+          rows="3"
+          [(ngModel)]="contact.notes"
+          #notes="ngModel"
+          [class.error]="notes.invalid && notes.touched"
+          [restrictedWords]="['foo', 'bar']"
+        ></textarea>
+        <em *ngIf="notes.errors?.['restrictedWords'] && notes.touched"
+          >Notes contain the following restricted words:
+          {{ notes.errors?.['restrictedWords'] }}</em
+        >
       </div>
     </section>
     <div class="buttons">
       @if(!contactForm.submitted){
       <button class="secondary" type="button">Cancel</button>
-      <button class="primary" type="submit">Save</button>} @else {
-      <button disabled class="saving">Saving...</button>}
+      <button class="primary" type="submit" [disabled]="contactForm.invalid">
+        Save</button
+      >} @else { <button disabled class="saving">Saving...</button>}
     </div>
   </form>
 </div>
