@@ -1,0 +1,137 @@
+<div class="content">
+  <h1 class="header">Edit Contact</h1>
+  <form [formGroup]="contactForm" (ngSubmit)="saveContact()">
+    <section>
+      <nav>Name/Info</nav>
+      <div>
+        <input type="hidden" formControlName="id" />
+        <input
+          placeholder="First Name"
+          formControlName="firstName"
+          [class.error]="
+            contactForm.get('firstName')?.touched &&
+            contactForm.get('firstName')?.invalid
+          "
+        />
+        <em
+          *ngIf="
+            contactForm.get('firstName')?.touched &&
+            contactForm.get('firstName')?.errors?.['required']
+          "
+          >First Name is required.
+        </em>
+        <em
+          *ngIf="
+            contactForm.get('firstName')?.touched &&
+            contactForm.get('firstName')?.errors?.['minlength']
+          "
+          >First Name should be 3 characters at least.
+        </em>
+        <input placeholder="Last Name" formControlName="lastName" />
+        <input
+          placeholder="Date of Birth"
+          type="date"
+          formControlName="dateOfBirth"
+        />
+        <div>
+          <span>Favorites Ranking: </span>
+          <input
+            type="range"
+            placeholder="Favorites Ranking"
+            formControlName="favoritesRanking"
+            min="0"
+            max="5"
+          />
+          <span>{{ contactForm.get("favoritesRanking")?.value }}</span>
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" formControlName="personal" />
+            Personal Contact
+          </label>
+        </div>
+      </div>
+    </section>
+    <section>
+      <nav>Phone</nav>
+      <div formArrayName="phones" class="flex-column">
+        @for (phone of contactForm.controls.phones.controls; track $index) {
+        <div
+          class="flex-column"
+          [formGroupName]="$index"
+          [class.error]="phone.invalid && phone.dirty"
+        >
+          <div class="flex-group">
+            <input placeholder="Phone" formControlName="phoneNumber" />
+            <img src="/assets/plus-grey-blue.png" class="add" />
+          </div>
+          <div class="radio">
+            @for (phoneType of phoneTypes; track $index) {
+            <input
+              type="radio"
+              formControlName="phoneType"
+              [value]="phoneType.value"
+            />
+            {{ phoneType.title }}
+            }
+          </div>
+          <em *ngIf="phone.invalid && phone.dirty">
+            the phone number is invalid.
+          </em>
+        </div>
+        }
+      </div>
+    </section>
+    <section>
+      <nav>Address</nav>
+      <div formArrayName="addresses" class="flex-column">
+        @for (address of contactForm.controls.addresses.controls; track $index)
+        {
+        <div
+          class="address"
+          [formGroupName]="$index"
+          [class.error]="address.invalid && address.dirty"
+        >
+          {{ contactForm.controls.addresses.controls[$index].invalid }}
+          <div class="flex-group">
+            <input
+              placeholder="Address"
+              [formControl]="address.controls.streetAddress"
+            />
+            <img src="/assets/plus-grey-blue.png" class="add" />
+          </div>
+          <input placeholder="City" [formControl]="address.controls.city" />
+          <input
+            placeholder="State/Region"
+            [formControl]="address.controls.state"
+          />
+          <input
+            placeholder="Zip/Postal Code"
+            [formControl]="address.controls.postalCode"
+          />
+          <select [formControl]="address.controls.addressType">
+            @for (addressType of addressTypes; track $index) {
+            <option [value]="addressType.value">{{ addressType.title }}</option>
+            }
+          </select>
+          <em *ngIf="address.invalid && address.dirty"
+            >the address is invalid.
+          </em>
+        </div>
+        }
+      </div>
+    </section>
+    <section>
+      <nav>Notes</nav>
+      <div>
+        <textarea name="notes" rows="3" formControlName="notes"></textarea>
+      </div>
+    </section>
+    <div class="buttons">
+      <button class="secondary">Cancel</button>
+      <button class="primary" type="submit" [disabled]="contactForm.invalid">
+        Save
+      </button>
+    </div>
+  </form>
+</div>

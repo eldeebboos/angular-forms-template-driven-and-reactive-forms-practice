@@ -10,12 +10,12 @@ export class InMemoryContactsApi implements InMemoryDbService {
         firstName: 'Percival',
         lastName: 'Doodleplumb',
         dateOfBirth: new Date('1994/05/05'),
-        favoritesRanking: 0,
+        favoritesRanking: 3,
         personal: false,
         notes: '',
         phones: [
-          { phoneNumber: '555-765-4321', phoneType: 'mobile' },
-          { phoneNumber: '555-333-555', phoneType: 'work' },
+          { phoneNumber: '555-765-4321', phoneType: 'work' },
+          { phoneNumber: '555-333-555', phoneType: 'mobile' },
         ],
         addresses: [
           {

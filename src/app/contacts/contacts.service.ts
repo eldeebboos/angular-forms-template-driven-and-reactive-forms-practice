@@ -23,15 +23,13 @@ export class ContactsService {
     return this.http.get<Contact[]>('api/contacts');
   }
 
-  saveContact(contact: Contact): Observable<Contact> {
+  saveContact(contact: Partial<Contact>): Observable<Contact> {
     const headers = { headers: { 'Content-Type': 'application/json' } };
 
     if (!contact.id || contact.id === '') {
-      let newContact: Contact = { ...contact, id: nanoid(5) };
+      let newContact: Partial<Contact> = { ...contact, id: nanoid(5) };
       return this.http.post<Contact>('api/contacts/', newContact, headers);
-    } else
-      return this.http
-        .put<Contact>('api/contacts/', contact, headers)
-        .pipe(delay(3000));
+    } else return this.http.put<Contact>('api/contacts/', contact, headers);
+    // .pipe(delay(3000));
   }
 }

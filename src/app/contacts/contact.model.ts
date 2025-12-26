@@ -1,6 +1,6 @@
 export interface Contact {
   id: string;
-  icon?: string;
+  icon: string;
   firstName: string;
   lastName: string;
   dateOfBirth: Date | null;
