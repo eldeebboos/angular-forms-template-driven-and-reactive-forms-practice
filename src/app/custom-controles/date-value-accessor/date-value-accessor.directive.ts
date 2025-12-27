@@ -19,6 +19,7 @@ export class DateValueAccessorDirective implements ControlValueAccessor {
   constructor(private element: ElementRef) {}
 
   // Listen to input and blur events on the host element
+  // listen to host element events and call the registered functions to notify angular forms about changes and touched state
   // HostListner is used to fire methods when events occur on the host element (date input) and update the date model in order to notify angular forms about changes (in template driven and reactive forms )
   @HostListener('input', ['$event.target.valueAsDate'])
   private onChange!: Function;
