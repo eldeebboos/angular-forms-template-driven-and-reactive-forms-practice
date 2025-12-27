@@ -5,6 +5,7 @@
       <nav>Name/Info</nav>
       <div>
         <input type="hidden" formControlName="id" />
+        <con-profile-icon formControlName="icon" />
         <input
           placeholder="First Name"
           formControlName="firstName"
@@ -63,7 +64,11 @@
         >
           <div class="flex-group">
             <input placeholder="Phone" formControlName="phoneNumber" />
-            <img src="/assets/plus-grey-blue.png" class="add" />
+            <img
+              src="/assets/plus-grey-blue.png"
+              class="add"
+              (click)="addnewPhone()"
+            />
           </div>
           <div class="radio">
             @for (phoneType of phoneTypes; track $index) {
@@ -85,20 +90,24 @@
     <section>
       <nav>Address</nav>
       <div formArrayName="addresses" class="flex-column">
-        @for (address of contactForm.controls.addresses.controls; track $index)
-        {
+        @for (address of contactForm.controls.addresses.controls; track $index ;
+        let index = $index) {
         <div
           class="address"
-          [formGroupName]="$index"
+          [formGroupName]="index"
           [class.error]="address.invalid && address.dirty"
         >
-          {{ contactForm.controls.addresses.controls[$index].invalid }}
+          {{ contactForm.controls.addresses.controls[index].invalid }}
           <div class="flex-group">
             <input
               placeholder="Address"
               [formControl]="address.controls.streetAddress"
             />
-            <img src="/assets/plus-grey-blue.png" class="add" />
+            <img
+              src="/assets/plus-grey-blue.png"
+              class="add"
+              (click)="addnewAddress()"
+            />
           </div>
           <input placeholder="City" [formControl]="address.controls.city" />
           <input
@@ -135,6 +144,9 @@
           Notes contains restricted words:
           {{
             notes?.errors?.['restrictedWords']
+
+
+
 
           }}.
         </em>

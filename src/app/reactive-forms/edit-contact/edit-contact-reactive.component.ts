@@ -12,11 +12,17 @@ import {
 import { ContactsService } from 'src/app/contacts/contacts.service';
 import { DateValueAccessorDirective } from 'src/app/custom-controles/date-value-accessor/date-value-accessor.directive';
 import { RestrictedWordsValidatorReactiveForms } from '../validators/restricted-words-validator-reactive-forms';
+import { ProfileIcon } from 'src/app/custom-controles/profile-icon/profile-icon';
 
 @Component({
   templateUrl: './edit-contact-reactive.component.html',
   styleUrls: ['./edit-contact-reactive.component.css'],
-  imports: [ReactiveFormsModule, CommonModule, DateValueAccessorDirective],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    DateValueAccessorDirective,
+    ProfileIcon,
+  ],
 })
 export class EditContactReactiveComponent implements OnInit {
   private route = inject(ActivatedRoute);
@@ -72,19 +78,26 @@ export class EditContactReactiveComponent implements OnInit {
 
     this.contactService.getContact(contactId).subscribe((contact) => {
       if (contact) {
+        // this.contactForm.controls.phones.clear();
+        // contact.phones.forEach((phone) => {
+        //   this.contactForm.controls.phones.push(this.getPhoneGroup(phone));
+        // });
+        // Or create empty phone group for eavery phonein contact and will be replaced by patchvalue
+        for (let i = 1; i < contact.phones.length; i++) {
+          this.contactForm.controls.phones.push(
+            this.getPhoneGroup({ phoneNumber: '', phoneType: '' })
+          );
+        }
+
+        this.contactForm.controls.addresses.clear();
+        contact.addresses.forEach((address) => {
+          this.contactForm.controls.addresses.push(
+            this.getAddressGroups(address)
+          );
+        });
+
         this.contactForm.patchValue(contact);
-        this.initiatContactFormArrays(contact);
       }
-    });
-  }
-  initiatContactFormArrays(contact: Contact) {
-    this.contactForm.controls.phones.clear();
-    contact.phones.forEach((phone) => {
-      this.contactForm.controls.phones.push(this.getPhoneGroup(phone));
-    });
-    this.contactForm.controls.addresses.clear();
-    contact.addresses.forEach((address) => {
-      this.contactForm.controls.addresses.push(this.getAddressGroups(address));
     });
   }
 
@@ -96,6 +109,23 @@ export class EditContactReactiveComponent implements OnInit {
     return this.contactForm.get('firstName');
   }
 
+  addnewPhone() {
+    this.contactForm.controls.phones.push(
+      this.getPhoneGroup({ phoneNumber: '', phoneType: '' })
+    );
+  }
+
+  addnewAddress() {
+    this.contactForm.controls.addresses.push(
+      this.getAddressGroups({
+        addressType: '',
+        city: '',
+        postalCode: '',
+        state: '',
+        streetAddress: '',
+      })
+    );
+  }
   saveContact() {
     console.log(this.contactForm.value);
 
