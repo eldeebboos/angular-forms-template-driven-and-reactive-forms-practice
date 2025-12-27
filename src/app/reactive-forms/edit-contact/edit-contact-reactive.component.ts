@@ -11,6 +11,7 @@ import {
 } from 'src/app/contacts/contact.model';
 import { ContactsService } from 'src/app/contacts/contacts.service';
 import { DateValueAccessorDirective } from 'src/app/custom-controles/date-value-accessor/date-value-accessor.directive';
+import { RestrictedWordsValidatorReactiveForms } from '../validators/restricted-words-validator-reactive-forms';
 
 @Component({
   templateUrl: './edit-contact-reactive.component.html',
@@ -33,7 +34,7 @@ export class EditContactReactiveComponent implements OnInit {
     dateOfBirth: <Date | null>null,
     favoritesRanking: <number | null>null,
     icon: '',
-    notes: '',
+    notes: ['', RestrictedWordsValidatorReactiveForms(['foo', 'bar'])],
     personal: false,
     phones: this.fb.array([
       this.getPhoneGroup({ phoneNumber: '', phoneType: '' }),
@@ -85,6 +86,14 @@ export class EditContactReactiveComponent implements OnInit {
     contact.addresses.forEach((address) => {
       this.contactForm.controls.addresses.push(this.getAddressGroups(address));
     });
+  }
+
+  get notes() {
+    return this.contactForm.get('notes');
+  }
+
+  get firstName() {
+    return this.contactForm.get('firstName');
   }
 
   saveContact() {

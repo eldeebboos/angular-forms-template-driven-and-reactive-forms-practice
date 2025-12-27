@@ -124,7 +124,20 @@
     <section>
       <nav>Notes</nav>
       <div>
-        <textarea name="notes" rows="3" formControlName="notes"></textarea>
+        <textarea
+          name="notes"
+          rows="3"
+          formControlName="notes"
+          [class.error]=""
+          notes?.invalid
+        ></textarea>
+        <em *ngIf="notes?.touched && notes?.errors?.['restrictedWords']">
+          Notes contains restricted words:
+          {{
+            notes?.errors?.['restrictedWords']
+
+          }}.
+        </em>
       </div>
     </section>
     <div class="buttons">
