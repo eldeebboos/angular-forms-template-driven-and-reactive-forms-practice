@@ -14,8 +14,8 @@ export class InMemoryContactsApi implements InMemoryDbService {
         personal: false,
         notes: '',
         phones: [
-          { phoneNumber: '555-765-4321', phoneType: 'work' },
-          { phoneNumber: '555-333-555', phoneType: 'mobile' },
+          { phoneNumber: '555-765-4321', phoneType: 'work', preferred: true },
+          { phoneNumber: '555-333-555', phoneType: 'mobile', preferred: false },
         ],
         addresses: [
           {
@@ -43,7 +43,13 @@ export class InMemoryContactsApi implements InMemoryDbService {
         favoritesRanking: 0,
         personal: false,
         notes: '',
-        phones: [{ phoneNumber: '555-877-5678', phoneType: 'mobile' }],
+        phones: [
+          {
+            phoneNumber: '555-877-5678',
+            phoneType: 'mobile',
+            preferred: false,
+          },
+        ],
         addresses: [
           {
             streetAddress: '543 Lullaby Lane',
@@ -63,7 +69,13 @@ export class InMemoryContactsApi implements InMemoryDbService {
         favoritesRanking: 1,
         personal: false,
         notes: '',
-        phones: [{ phoneNumber: '555-123-4567', phoneType: 'mobile' }],
+        phones: [
+          {
+            phoneNumber: '555-123-4567',
+            phoneType: 'mobile',
+            preferred: false,
+          },
+        ],
         addresses: [
           {
             streetAddress: '123 Merriment Avenue',

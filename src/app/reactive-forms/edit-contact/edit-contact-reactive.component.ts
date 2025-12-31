@@ -13,6 +13,7 @@ import { ContactsService } from 'src/app/contacts/contacts.service';
 import { DateValueAccessorDirective } from 'src/app/custom-controles/date-value-accessor/date-value-accessor.directive';
 import { RestrictedWordsValidatorReactiveForms } from '../validators/restricted-words-validator-reactive-forms';
 import { ProfileIcon } from 'src/app/custom-controles/profile-icon/profile-icon';
+import { distinctUntilChanged } from 'rxjs';
 
 @Component({
   templateUrl: './edit-contact-reactive.component.html',
@@ -43,10 +44,14 @@ export class EditContactReactiveComponent implements OnInit {
     notes: ['', RestrictedWordsValidatorReactiveForms(['foo', 'bar'])],
     personal: false,
     phones: this.fb.array([
-      this.getPhoneGroup({ phoneNumber: '', phoneType: '' }),
+      this.createPhoneGroup({
+        phoneNumber: '',
+        phoneType: '',
+        preferred: false,
+      }),
     ]),
     addresses: this.fb.array([
-      this.getAddressGroups({
+      this.createAddressGroups({
         addressType: '',
         city: '',
         postalCode: '',
@@ -56,13 +61,49 @@ export class EditContactReactiveComponent implements OnInit {
     ]),
   });
 
-  getPhoneGroup(phone: Phone) {
-    return this.fb.nonNullable.group({
+  createPhoneGroup(phone: Phone) {
+    const phoneGroup = this.fb.nonNullable.group({
       phoneNumber: [phone.phoneNumber || '', Validators.required],
       phoneType: phone.phoneType || '',
+      preferred: false,
     });
+
+    phoneGroup.controls.preferred.valueChanges
+      .pipe(
+        // Use distinctUntilChanged to prevent multiple triggers for same value to avoid inifinite loop
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+      )
+      .subscribe((isPreferred) => {
+        if (isPreferred) {
+          phoneGroup.controls.phoneNumber.addValidators([Validators.required]);
+          // Uncheck other preferred phones
+          // this.contactForm.controls.phones.controls.forEach((pg) => {
+          //   if (pg !== phoneGroup) {
+          //     pg.controls.preferred.setValue(false, { emitEvent: false });
+          //     // pg.controls.phoneNumber.updateValueAndValidity();
+          //   }
+          // });
+        } else {
+          phoneGroup.controls.phoneNumber.removeValidators([
+            Validators.required,
+          ]);
+        }
+        phoneGroup.controls.phoneNumber.updateValueAndValidity();
+      });
+
+    // phoneGroup.updateValueAndValidity();
+    phoneGroup.valueChanges.subscribe((value) => {
+      // console.log('Phone group value changed:', value);
+    });
+
+    //also we can subscribe to validity changes
+    // phoneGroup.statusChanges.subscribe((status) => {
+    //   console.log('Phone group status changed:', status);
+    // });
+
+    return phoneGroup;
   }
-  getAddressGroups(address: Address) {
+  createAddressGroups(address: Address) {
     return this.fb.nonNullable.group({
       streetAddress: [address.streetAddress || '', Validators.required],
       city: [address.city || '', Validators.required],
@@ -85,14 +126,18 @@ export class EditContactReactiveComponent implements OnInit {
         // Or create empty phone group for eavery phonein contact and will be replaced by patchvalue
         for (let i = 1; i < contact.phones.length; i++) {
           this.contactForm.controls.phones.push(
-            this.getPhoneGroup({ phoneNumber: '', phoneType: '' })
+            this.createPhoneGroup({
+              phoneNumber: '',
+              phoneType: '',
+              preferred: false,
+            })
           );
         }
 
         this.contactForm.controls.addresses.clear();
         contact.addresses.forEach((address) => {
           this.contactForm.controls.addresses.push(
-            this.getAddressGroups(address)
+            this.createAddressGroups(address)
           );
         });
 
@@ -111,13 +156,17 @@ export class EditContactReactiveComponent implements OnInit {
 
   addnewPhone() {
     this.contactForm.controls.phones.push(
-      this.getPhoneGroup({ phoneNumber: '', phoneType: '' })
+      this.createPhoneGroup({
+        phoneNumber: '',
+        phoneType: '',
+        preferred: false,
+      })
     );
   }
 
   addnewAddress() {
     this.contactForm.controls.addresses.push(
-      this.getAddressGroups({
+      this.createAddressGroups({
         addressType: '',
         city: '',
         postalCode: '',

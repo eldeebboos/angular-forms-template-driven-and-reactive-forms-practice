@@ -70,6 +70,9 @@
               (click)="addnewPhone()"
             />
           </div>
+          <em *ngIf="phone.controls.phoneNumber.invalid">
+            preferred phone number is required.
+          </em>
           <div class="radio">
             @for (phoneType of phoneTypes; track $index) {
             <input
@@ -80,9 +83,9 @@
             {{ phoneType.title }}
             }
           </div>
-          <em *ngIf="phone.invalid && phone.dirty">
-            the phone number is invalid.
-          </em>
+          <span>
+            <input type="checkbox" formControlName="preferred" /> Prefered
+          </span>
         </div>
         }
       </div>
@@ -144,6 +147,17 @@
           Notes contains restricted words:
           {{
             notes?.errors?.['restrictedWords']
+
+
+
+
+
+
+
+
+
+
+
 
 
 
